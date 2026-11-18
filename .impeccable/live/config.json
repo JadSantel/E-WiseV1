@@ -1,0 +1,6 @@
+{
+  "files": ["outputs/e-wise-live/*.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

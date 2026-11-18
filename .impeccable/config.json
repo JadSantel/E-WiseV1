@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "outputs/e-wise-live/index.html"
+        ],
+        "createdAt": "2026-11-17T15:21:40.812Z",
+        "reason": "Agent: original supplied mockup presentation board uses #f5f4ef around its iframe previews; preserve this fixture backdrop separately from the E-wise site palette."
+      }
+    ]
+  }
+}
