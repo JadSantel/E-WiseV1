@@ -11,12 +11,14 @@ board_path = root / 'outputs/E-wise-design-baseline.html'
 board = board_path.read_text(encoding='utf-8')
 font_url = 'data:font/woff2;base64,' + base64.b64encode((pages / 'figtree-latin.woff2').read_bytes()).decode('ascii')
 manifest = {}
-page_files = [('80fe0b9b-3f78-4cbd-9bee-26ef64b221ce', 'homepage.html'), ('1d5efe2e-cbf0-435e-9942-f8624e6301e0', 'evaluate.html'), ('8b78852c-10d7-4a2b-84ed-e4b32510f4d0', 'verdict.html')]
+page_files = [('80fe0b9b-3f78-4cbd-9bee-26ef64b221ce', 'homepage.html'), ('1d5efe2e-cbf0-435e-9942-f8624e6301e0', 'evaluate.html'), ('8b78852c-10d7-4a2b-84ed-e4b32510f4d0', 'verdict.html'), ('bfa5cd82-95ae-49d5-90ac-b8b7d1aa8710', 'routing.html'), ('e2e4725c-80d1-466b-a35f-865eea06c70c', 'transact.html'), ('a4b1de88-04c6-43e0-8bb7-4ea47989db41', 'marketplace.html')]
 navigation_source = (pages / 'preview-navigation.js').read_text(encoding='utf-8')
 navigation_tag = '<script>' + navigation_source + '</script>'
 for key, name in page_files:
     text = (pages / name).read_text(encoding='utf-8').replace('figtree-latin.woff2', font_url)
     text = text.replace('<script src="preview-navigation.js"></script>', navigation_tag)
+    for script_name in re.findall(r'<script src="([^"/]+\.js)"></script>', text):
+        text = text.replace(f'<script src="{script_name}"></script>', '<script>' + (pages / script_name).read_text(encoding='utf-8') + '</script>')
     manifest[key] = {'mime': 'text/html', 'compressed': True, 'data': base64.b64encode(gzip.compress(text.encode('utf-8'), mtime=0)).decode('ascii')}
     assert gzip.decompress(base64.b64decode(manifest[key]['data'])).decode('utf-8') == text
 pattern = r'(<script type="__bundler/manifest">).*?(</script>)'
@@ -35,4 +37,4 @@ navigation = '<script id="ewise-board-navigation">' + navigation_source + '</scr
 board, count = re.subn(r'<script id="ewise-board-navigation">.*?</script>\s*', lambda _: navigation, board, count=1, flags=re.S)
 assert count == 1, 'Expected one board navigation script'
 board_path.write_text(board, encoding='utf-8')
-print('Synchronized the single-file board with all three editable screens.')
+print(f'Synchronized the single-file board with all {len(page_files)} editable screens.')

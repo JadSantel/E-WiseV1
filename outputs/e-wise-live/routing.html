@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choose your route — E-wise</title>
+<style>
+@font-face{font-family:Figtree;font-style:normal;font-weight:400 800;font-display:swap;src:url("figtree-latin.woff2") format("woff2")}
+*{box-sizing:border-box}body{margin:0;background:#FAFAFA;color:#0B0B0B;font:16px/1.5 Figtree,sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}svg{flex:none;vertical-align:middle}[hidden]{display:none!important}
+.w{max-width:1200px;margin:auto;padding:0 24px}.flow-header{display:flex;align-items:center;gap:32px;height:80px}.wordmark{font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1}.steps{display:flex;align-items:center;gap:28px;list-style:none;margin:0 auto;padding:0;font-size:14px;font-weight:500}.steps li{display:flex;align-items:center;gap:8px;color:#4A4A4A;white-space:nowrap}.steps li[aria-current="step"]{color:#0B0B0B;font-weight:600}.step-number{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#EDEDED;color:#0B0B0B;font-size:12px}.steps li[aria-current="step"] .step-number,.step-number.complete{background:#0B0B0B;color:#fff}.text-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:14px;font-weight:600;text-underline-offset:4px}.text-link:hover{text-decoration:underline}.progress{height:4px;background:#E4E4E4}.progress span{display:block;width:75%;height:100%;background:#E5F77A}
+main.w{padding-top:32px;padding-bottom:56px}h1{font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:.95;text-transform:uppercase;margin:16px 0;text-wrap:balance}.intro{max-width:65ch;margin:0 0 32px;color:#4A4A4A;font-size:18px;line-height:1.5}.routing-layout{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:32px;align-items:start}.workspace,.device-summary{background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}.workspace{padding:28px}fieldset{border:0;padding:0;margin:0;min-width:0}legend{font-size:22px;font-weight:600;line-height:1.3;padding:0;margin-bottom:20px}.route-options{display:grid;gap:8px}.route-option{position:relative;display:flex;align-items:center;gap:16px;min-height:92px;padding:16px;border:1.5px solid transparent;border-radius:12px;cursor:pointer}.route-option:hover{background:#FAFAFA}.route-option:has(input:checked){border-color:#0B0B0B;background:#FAFAFA}.route-option input,.method-option input{accent-color:#0B0B0B;width:18px;height:18px;flex:none;margin:0}.route-icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:10px;background:#E5F77A}.route-icon.repair{background:#CFE6F7;color:#0B3A5C}.route-icon.salvage{background:#F7E2B5;color:#5C3A00}.route-icon.dispose{background:#E7DDFB;color:#35244F}.route-copy{flex:1;min-width:0}.route-title{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:18px;font-weight:600;line-height:1.4}.badge{display:inline-block;background:#E5F77A;color:#283400;border-radius:4px;padding:3px 8px;font-size:12px;font-weight:600;line-height:1.5}.route-description{display:block;margin-top:4px;font-size:14px;line-height:1.5;color:#4A4A4A}.route-context{border-top:1px solid #E4E4E4;margin-top:24px;padding-top:24px}.route-context>p{margin:0 0 20px;color:#4A4A4A;font-size:15px;line-height:1.6}.methods legend{font-size:18px;margin-bottom:12px}.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.method-option{display:flex;align-items:flex-start;gap:10px;padding:16px;border:1.5px solid #D4D4D4;border-radius:10px;cursor:pointer}.method-option:has(input:checked){border-color:#0B0B0B;background:#FAFAFA}.method-option:hover{border-color:#0B0B0B}.method-option input{margin-top:3px}.method-option strong{display:block;font-size:15px;font-weight:600}.method-option small{display:block;margin-top:4px;font-size:13px;line-height:1.5;color:#4A4A4A}.route-guidance{font-size:14px;color:#4A4A4A;margin:16px 0 0;line-height:1.6}.route-guidance strong{color:#0B0B0B}.route-context h2{font-size:20px;font-weight:600;margin:0 0 12px}.preparation{margin:0;padding-left:22px;color:#4A4A4A;font-size:15px;line-height:1.6}.preparation li+li{margin-top:8px}
+.device-summary{padding:24px}.device-summary h2{font-size:20px;font-weight:600;margin:0 0 20px}.device-overview{display:flex;align-items:center;gap:16px;margin-bottom:20px}.device-preview{display:flex;align-items:center;justify-content:center;width:80px;height:104px;border-radius:12px;background:#EDEDED;flex:none}.device-shape{width:42px;height:82px;border-radius:9px;background:linear-gradient(160deg,#2A2A2E,#0B0B0B)}.device-name{font-size:18px;font-weight:600;line-height:1.3;margin:0 0 4px}.device-meta{font-size:13px;color:#4A4A4A;margin:0 0 8px}.tag{display:inline-block;padding:3px 8px;border-radius:4px;background:#B9F2C9;color:#064B24;font-size:12px;font-weight:600}.device-facts{margin:0}.device-facts div{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #E4E4E4;font-size:14px}.device-facts dt{color:#4A4A4A}.device-facts dd{margin:0;text-align:right;font-weight:500}.fault-note{border-top:1px solid #E4E4E4;padding-top:16px;margin:4px 0 24px;font-size:14px;color:#4A4A4A;line-height:1.6}.fault-note strong{display:block;color:#0B0B0B;font-weight:600;margin-bottom:4px}.selection-summary{border-top:1px solid #E4E4E4;padding-top:20px}.selection-summary h3{font-size:18px;line-height:1.4;font-weight:600;margin:0 0 8px}.estimate-label{margin:0;color:#4A4A4A;font-size:13px}.estimate{font-size:24px;font-weight:600;letter-spacing:-.02em;color:#0A6B38;margin:4px 0 0;font-variant-numeric:tabular-nums}.estimate-note{color:#4A4A4A;font-size:12px;margin:4px 0 16px}.next-preview{margin-top:20px}.next-preview summary{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:12px 16px;border-radius:8px;background:#0B0B0B;color:#fff;font-size:15px;font-weight:600;cursor:pointer;list-style:none;transition:background .2s ease}.next-preview summary:hover{background:#262626}summary::-webkit-details-marker{display:none}.next-preview[open] summary svg{transform:rotate(180deg)}.next-preview summary svg{transition:transform .2s ease}.next-content{padding-top:20px}.next-content h4{font-size:18px;font-weight:600;line-height:1.4;margin:0 0 12px}.next-content ol{padding-left:20px;margin:0;font-size:14px;line-height:1.6;color:#4A4A4A}.next-content li+li{margin-top:8px}.preview-note{font-size:13px;color:#4A4A4A;line-height:1.5;margin:16px 0 0}.preview-note strong{color:#0B0B0B;font-weight:600}.device-summary>.text-link{margin-top:12px}.page-note{margin:28px 0 0;color:#4A4A4A;font-size:13px}.mobile-step{display:none}:focus-visible{outline:2px solid #0B0B0B;outline-offset:4px;border-radius:4px}input:focus-visible{outline-offset:4px}.route-option:has(input:focus-visible),.method-option:has(input:focus-visible){outline:2px solid #0B0B0B;outline-offset:3px}::selection{background:#E5F77A;color:#0B0B0B}
+.route-context>.route-guidance{margin:16px 0 0}
+.continue-link{display:flex;align-items:center;justify-content:center;min-height:52px;padding:12px 16px;margin-top:20px;border-radius:8px;background:#0B0B0B;color:#fff;font-size:15px;font-weight:600;text-align:center}.continue-link:hover{background:#262626}.next-preview{margin-top:12px}.next-preview summary{background:#EDEDED;color:#0B0B0B}.next-preview summary:hover{background:#E4E4E4}
+@media(max-width:1050px){.routing-layout{grid-template-columns:minmax(0,1fr) 300px;gap:24px}.workspace{padding:24px}.steps{gap:16px}.route-option{gap:12px;padding:12px}.route-icon{width:36px;height:36px}.method-grid{grid-template-columns:1fr}}
+@media(max-width:800px){.steps{display:none}.flow-header{justify-content:space-between}.routing-layout{grid-template-columns:minmax(0,1fr)}h1{font-size:48px}.mobile-step{display:block;margin:0 0 8px;color:#4A4A4A;font-size:14px}.method-grid{grid-template-columns:1fr 1fr}.device-summary{max-width:none}.device-overview{gap:20px}.device-preview{width:88px}.device-summary .estimate{font-size:28px}.next-preview summary{max-width:100%}}
+@media(max-width:520px){.w{padding:0 20px}.flow-header{gap:16px}.flow-header>.text-link{font-size:13px}.wordmark{font-size:28px}main.w{padding-top:24px}h1{font-size:40px}.intro{font-size:16px}.workspace{padding:20px}legend{font-size:20px}.route-option{gap:10px;padding:12px 8px}.route-title{font-size:17px}.route-icon{display:none}.route-description{font-size:13px}.method-grid{grid-template-columns:1fr}.route-context{margin-top:20px;padding-top:20px}}
+@media(prefers-reduced-motion:reduce){.next-preview summary,.next-preview summary svg{transition:none}}
+</style>
+</head>
+<body>
+<header class="flow-header w">
+<a class="wordmark" href="homepage.html" data-page="home" aria-label="E-wise home">E-wise</a>
+<ol class="steps" aria-label="Device evaluation progress">
+<li><span class="step-number complete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></span>Evaluate</li>
+<li><span class="step-number complete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg></span>Classify</li>
+<li aria-current="step"><span class="step-number">3</span>Route</li>
+<li><span class="step-number">4</span>Transact</li>
+</ol>
+<a class="text-link" href="marketplace.html" data-page="marketplace">Back to marketplace</a>
+</header>
+<div class="progress" aria-hidden="true"><span></span></div>
+<main class="w">
+<a class="text-link" href="verdict.html" data-page="verdict">← Back to your verdict</a>
+<h1>Choose your route.</h1>
+<p class="intro">Choose what happens next to your iPhone 13. Resell it as-is, repair it, or explore another path.</p>
+<p class="mobile-step">Step 3 of 4 · Route</p>
+<div class="routing-layout">
+<section class="workspace" aria-label="Choose a route and selling method">
+<fieldset>
+<legend>Where should it go next?</legend>
+<div class="route-options">
+<label class="route-option">
+<input type="radio" name="route" value="resell" checked>
+<span class="route-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13 11 22 2 13V2h11l9 9-2 2Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span>
+<span class="route-copy"><span class="route-title">Resell <span class="badge">Recommended</span></span><span class="route-description">Sell your phone as-is, with the camera issue disclosed.</span></span>
+</label>
+<label class="route-option">
+<input type="radio" name="route" value="repair">
+<span class="route-icon repair" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6 4 4 4-4a7 7 0 0 1-9 9l-6 6a3 3 0 0 1-4-4l6-6a7 7 0 0 1 9-9l-4 4Z"/></svg></span>
+<span class="route-copy"><span class="route-title">Repair / Reuse</span><span class="route-description">Explore a camera repair and keep using your phone.</span></span>
+</label>
+<label class="route-option">
+<input type="radio" name="route" value="salvage">
+<span class="route-icon salvage" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></svg></span>
+<span class="route-copy"><span class="route-title">Salvage</span><span class="route-description">Sell for parts to a technician or refurbisher.</span></span>
+</label>
+<label class="route-option">
+<input type="radio" name="route" value="dispose">
+<span class="route-icon dispose" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 3-3 3 3m-3-3v14m-5-6H3l4-5m-4 5 4 7m10-7h4l-4-5m4 5-4 7M7 21h10"/></svg></span>
+<span class="route-copy"><span class="route-title">Dispose / Recycle</span><span class="route-description">Consider responsible disposal when reuse is no longer an option.</span></span>
+</label>
+</div>
+</fieldset>
+<div class="route-context">
+<p id="route-reason">Your phone’s core functions still work. Selling it whole has more estimated value than selling it for parts.</p>
+<fieldset class="methods" id="selling-methods">
+<legend>How would you like to sell?</legend>
+<div class="method-grid">
+<label class="method-option"><input type="radio" name="method" value="fixed" checked><span><strong>Fixed price</strong><small>Set your asking price. Buyers know what you’re looking for.</small></span></label>
+<label class="method-option"><input type="radio" name="method" value="bidding"><span><strong>Open for bids</strong><small>Receive offers and decide which one works for you.</small></span></label>
+</div>
+</fieldset>
+<div id="service-preparation" hidden>
+<h2 id="preparation-title">Before a repair assessment</h2>
+<ul class="preparation" id="preparation-list"></ul>
+</div>
+<p class="route-guidance" id="route-guidance"><strong>Keep the camera fault visible.</strong> Buyers should see it in your title, description, and photos.</p>
+</div>
+</section>
+<aside class="device-summary" aria-labelledby="device-title">
+<h2 id="device-title">Your device, your decision.</h2>
+<div class="device-overview">
+<div class="device-preview" aria-hidden="true"><div class="device-shape"></div></div>
+<div><p class="device-name">Apple iPhone 13</p><p class="device-meta">128 GB · 1 to 2 years old</p><span class="tag">Resellable</span></div>
+</div>
+<dl class="device-facts"><div><dt>Physical condition</dt><dd>Good</dd></div><div><dt>Known issue</dt><dd>Camera not working</dd></div></dl>
+<p class="fault-note"><strong>Keep the full picture.</strong>The camera fault stays part of your device details, whichever route you choose.</p>
+<section class="selection-summary" aria-label="Selected route" aria-live="polite" aria-atomic="true">
+<h3 id="selection-title">Resell · Fixed price</h3>
+<p class="estimate-label" id="estimate-label">Estimated resale value</p>
+<p class="estimate" id="estimate">₱18,000–₱20,000</p>
+<p class="estimate-note" id="estimate-note">Illustrative range, not a guaranteed sale price.</p>
+</section>
+<a class="continue-link" id="continue-transact" href="transact.html?route=resell&amp;method=fixed" data-page="transact" data-route="resell" data-method="fixed">Continue to Transact →</a>
+<details class="next-preview" id="next-preview">
+<summary>Preview next step <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></summary>
+<div class="next-content" id="next-content">
+<h4 id="next-title">Create a fixed-price listing</h4>
+<ol id="next-list"><li>Add photos and describe the camera issue.</li><li>Choose your asking price.</li><li>Review your listing before publishing.</li></ol>
+</div>
+</details>
+<p class="preview-note"><strong>Sample preview.</strong> Nothing is published, booked, or submitted.</p>
+<a class="text-link" href="evaluate.html" data-page="evaluate">Edit device details →</a>
+</aside>
+</div>
+<p class="page-note">Sample iPhone 13 · Values are illustrative. Your classification stays Resellable when you explore another route.</p>
+</main>
+<script src="preview-navigation.js"></script>
+<script src="routing.js"></script>
+</body>
+</html>

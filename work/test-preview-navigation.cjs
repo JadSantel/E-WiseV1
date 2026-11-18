@@ -8,19 +8,21 @@ function harness(embedded) {
   const parent = {postMessage: message => messages.push(message)};
   const window = {addEventListener: (name, callback) => windowEvents[name] = callback};
   window.parent = embedded ? parent : window;
-  const frames = ['home', 'evaluate', 'verdict'].map(page => ({
+  const frames = ['home', 'evaluate', 'verdict', 'routing', 'transact', 'marketplace'].map(page => ({
     dataset: {page}, style: {}, contentWindow: {postMessage: message => messages.push(message)},
     closest: () => ({scrollIntoView: () => scrolled.push(page)}),
   }));
   const document = {
     addEventListener: (name, callback) => documentEvents[name] = callback,
+    dispatchEvent: event => { if (documentEvents[event.type]) documentEvents[event.type](event); },
     querySelector: () => ({addEventListener: (name, callback) => formEvents[name] = callback}),
     querySelectorAll: () => frames,
     getElementById: id => id === 'marketplace' ? {scrollIntoView: () => scrolled.push('anchor')} : null,
     body: {getBoundingClientRect: () => ({height: 1234.2})},
   };
   class ResizeObserver { constructor(callback) { this.callback = callback; } observe() { this.callback(); } }
-  vm.runInNewContext(code, {window, document, ResizeObserver});
+  class CustomEvent { constructor(type, options) { this.type = type; this.detail = options.detail; } }
+  vm.runInNewContext(code, {window, document, ResizeObserver, CustomEvent});
   return {windowEvents, documentEvents, formEvents, frames, parent, messages, scrolled};
 }
 
@@ -41,6 +43,29 @@ for (const height of ['900', NaN, Infinity, -1, 20001]) {
 board.windowEvents.message({source: board.frames[0].contentWindow, data: {type: 'ewise:resize', height: 1400.5}});
 assert.equal(board.frames[0].style.height, '1401px');
 const child = harness(true);
+board.windowEvents.message({source: board.frames[3].contentWindow, data: {type: 'ewise:navigate', page: 'transact', selection: {route: 'salvage', method: 'bidding'}}});
+assert.equal(board.scrolled.at(-1), 'transact');
+assert.equal(board.messages.at(-1).selection.route, 'salvage');
+let received;
+child.documentEvents['ewise:selection'] = event => received = event.detail;
+child.windowEvents.message({source: {}, data: {type: 'ewise:selection', selection: {route: 'repair'}}});
+assert.equal(received, undefined, 'Ignore selection from unrelated windows');
+child.windowEvents.message({source: child.parent, data: {type: 'ewise:selection', selection: {route: '__proto__'}}});
+assert.equal(received, undefined, 'Ignore unknown routes');
+child.windowEvents.message({source: child.parent, data: {type: 'ewise:selection', selection: {route: 'repair', method: 'invalid'}}});
+assert.equal(received.route, 'repair');
+assert.equal(received.method, 'fixed');
+let filtered;
+child.documentEvents['ewise:browse'] = event => filtered = event.detail;
+child.windowEvents.message({source: {}, data: {type: 'ewise:browse', browse: {category: 'laptops', q: 'Apple'}}});
+assert.equal(filtered, undefined, 'Ignore browsing messages from unrelated windows');
+board.windowEvents.message({source: board.frames[2].contentWindow, data: {type: 'ewise:navigate', page: 'marketplace', browse: {category: 'invalid', q: ' iPhone '}}});
+assert.equal(board.scrolled.at(-1), 'marketplace');
+assert.equal(board.messages.at(-1).browse.category, '');
+assert.equal(board.messages.at(-1).browse.q, 'iPhone');
+child.windowEvents.message({source: child.parent, data: {type: 'ewise:browse', browse: {category: 'laptops', q: 'Apple'}}});
+assert.equal(filtered.category, 'laptops');
+assert.equal(filtered.q, 'Apple');
 assert.ok(child.messages.some(message => message.type === 'ewise:resize' && message.height === 1235));
 let prevented = false;
 const click = {target: {closest: () => ({dataset: {page: 'verdict'}})}, button: 0, preventDefault: () => prevented = true};
@@ -64,4 +89,4 @@ inputs[1].change();
 assert.match(explanation.textContent, /place bids/);
 inputs[0].change();
 assert.match(explanation.textContent, /asking price/);
-console.log('Passed: board navigation, edit/back links, sender validation, frame resizing, standalone links, and selling-option state.');
+console.log('Passed: board navigation, edit/back links, sender validation, route/method and marketplace handoff, frame resizing, standalone links, and selling-option state.');
