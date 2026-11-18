@@ -1,5 +1,7 @@
 # E-wise — incumbent design baseline
 
+Marketplace visual update (2026-11-18): the user requested a broader catalog and visible device damage. The 18 illustrative listings now include printers, monitors, desktops, cameras and accessories alongside the existing categories. Shared, authored front-view SVG device geometry shows the disclosed sample faults: cracked glass and LCD damage, paper jams and broken trays, exposed desktop components, cracked camera glass, worn ear cushions and missing keycaps. Homepage marketplace cards and buyer summaries use the same visuals; damage is decorative and listing text supplies the condition details. The portable HTML board is synchronized with the editable pages. Browser checks cover category filtering, existing search/sort/recovery, mobile overflow from 320–1440px, and native/live/portable listing handoffs.
+
 Source: the supplied HTML board, preserved in `outputs/E-wise-design-baseline.html`. These are observations from its embedded HTML/CSS, not a redesign or newly approved design choices. Preserve the current screens until the user specifies an edit.
 
 ## Visual identity

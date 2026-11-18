@@ -1,20 +1,7 @@
 (function() {
   'use strict';
-  const products = [
-    {id:'iphone-13',name:'Apple iPhone 13',brand:'Apple',category:'smartphones',condition:'Good',classification:'Resellable',sale:'fixed',storage:'128 GB',age:'2 years',price:18500,issue:'Camera not working; other core functions work.',description:'Offered as-is with the camera fault disclosed. Review the device condition before considering a purchase.'},
-    {id:'galaxy-s21',name:'Samsung Galaxy S21',brand:'Samsung',category:'smartphones',condition:'Fair',classification:'Resellable',sale:'bidding',storage:'256 GB',age:'3 years',price:9000,issue:'Visible frame wear; screen and touch working.',description:'A sample bidding listing for a working device with cosmetic wear. The displayed amount is a starting price.'},
-    {id:'iphone-11',name:'Apple iPhone 11',brand:'Apple',category:'smartphones',condition:'Damaged',classification:'Salvageable',sale:'parts',storage:'64 GB',age:'4 years',price:2500,issue:'Won’t power on; screen appears intact.',description:'Offered as a whole device for parts. Internal components are untested and would need inspection.'},
-    {id:'redmi-note-12',name:'Xiaomi Redmi Note 12',brand:'Xiaomi',category:'smartphones',condition:'Good',classification:'Resellable',sale:'fixed',storage:'128 GB',age:'1 year',price:5500,issue:'Minor case marks; core functions working.',description:'A sample second-hand device with ordinary signs of use. Photos and device details would need confirmation.'},
-    {id:'macbook-air',name:'Apple MacBook Air M1',brand:'Apple',category:'laptops',condition:'Good',classification:'Resellable',sale:'fixed',storage:'256 GB · 8 GB RAM',age:'3 years',price:29500,issue:'Light lid scratches; keyboard and display working.',description:'A sample laptop listing for everyday work and study. Battery condition would need assessment by the buyer.'},
-    {id:'thinkpad-t14',name:'Lenovo ThinkPad T14',brand:'Lenovo',category:'laptops',condition:'Fair',classification:'Repairable',sale:'fixed',storage:'512 GB · 16 GB RAM',age:'4 years',price:12500,issue:'Battery needs replacement; works on charger.',description:'A repair project with its battery issue disclosed. Any repair cost is separate and is not estimated here.'},
-    {id:'ipad-9',name:'Apple iPad 9th generation',brand:'Apple',category:'tablets',condition:'Good',classification:'Resellable',sale:'fixed',storage:'64 GB',age:'2 years',price:11500,issue:'Small case marks; display and touch working.',description:'A sample tablet listing. Included accessories and exact condition would need confirmation before purchase.'},
-    {id:'sony-wh',name:'Sony WH-1000XM4',brand:'Sony',category:'audio',condition:'Fair',classification:'Resellable',sale:'fixed',storage:'Wireless headphones',age:'2 years',price:6500,issue:'Worn ear cushions; audio and Bluetooth working.',description:'A sample audio listing with cushion wear disclosed. No replacement accessories or warranty are promised.'},
-    {id:'switch-lite',name:'Nintendo Switch Lite',brand:'Nintendo',category:'gaming',condition:'Good',classification:'Resellable',sale:'bidding',storage:'32 GB',age:'2 years',price:5000,issue:'Minor shell wear; buttons and sticks working.',description:'A sample console listing open for bids. Games and accessories are not included in this illustrative listing.'},
-    {id:'galaxy-a54',name:'Samsung Galaxy A54',brand:'Samsung',category:'smartphones',condition:'Excellent',classification:'Resellable',sale:'fixed',storage:'128 GB',age:'1 year',price:10500,issue:'Light signs of use; core functions working.',description:'A sample device in excellent physical condition. This is not a certified refurbishment or warranty claim.'},
-    {id:'asus-vivobook',name:'ASUS VivoBook 15',brand:'ASUS',category:'laptops',condition:'Damaged',classification:'Salvageable',sale:'parts',storage:'256 GB · 8 GB RAM',age:'5 years',price:3500,issue:'Cracked display; powers on with external monitor.',description:'Offered as a whole laptop for parts or assessment. Untested components should not be assumed to work.'},
-    {id:'iphone-12-mini',name:'Apple iPhone 12 mini',brand:'Apple',category:'smartphones',condition:'Fair',classification:'Repairable',sale:'bidding',storage:'64 GB',age:'3 years',price:7500,issue:'Charging port intermittent; screen working.',description:'A sample repair project open for bids. A technician would need to assess the charging fault and any repair cost.'},
-  ];
-  const categories = {smartphones:'Smartphones',laptops:'Laptops',tablets:'Tablets',audio:'Audio',gaming:'Gaming'};
+  const products = window.EwiseCatalog;
+  const categories = {smartphones:'Smartphones',laptops:'Laptops',tablets:'Tablets',printers:'Printers',monitors:'Monitors',desktops:'Desktops',audio:'Audio',gaming:'Gaming',cameras:'Cameras',accessories:'Accessories'};
   const sales = {fixed:'Fixed price',bidding:'Open for bids',parts:'For parts'};
   const get = id => document.getElementById(id);
   const filters = get('filter-body');
@@ -60,11 +47,11 @@
     const article = document.createElement('article');
     article.className = 'product-card'; article.dataset.id = product.id; article.dataset.price = product.price;
     // All interpolated strings below are authored sample catalog entries, never user input.
-    article.innerHTML = '<div class="product-visual" aria-hidden="true"><div class="device '+product.category+'"></div></div>'+
+    article.innerHTML = '<div class="product-visual" aria-hidden="true">'+window.EwiseDeviceVisual(product)+'</div>'+
       '<div class="product-tags"><span class="tag '+product.classification.toLowerCase()+'">'+product.classification+'</span><span class="sale-type">'+sales[product.sale]+'</span></div>'+
       '<h3>'+product.name+'</h3><p class="product-meta">'+product.condition+' · '+product.storage+'<br>'+product.age+' old</p>'+
       '<p class="price">'+money(product.price)+'</p><p class="price-note">'+(product.sale==='bidding'?'Sample starting price':'Sample asking price')+'</p>'+
-      '<p class="condition-note">'+product.issue+'</p><details class="listing-details"><summary>View sample listing '+icons.down+'</summary><div class="listing-copy"><p><strong>Device details</strong><br>'+product.description+'</p><p><strong>Known condition</strong><br>'+product.issue+'</p><p>Sample preview only. Buying, offers, and bidding are not available here.</p></div></details>';
+      '<p class="condition-note">'+product.issue+'</p><a class="buyer-action" href="buyer.html?listing='+product.id+'" data-page="buyer" data-listing="'+product.id+'" aria-label="'+(product.sale==='bidding'?'Place a bid on ':'Make an offer on ')+product.name+'">'+(product.sale==='bidding'?'Place a bid':'Make an offer')+' →</a><details class="listing-details"><summary>View sample listing '+icons.down+'</summary><div class="listing-copy"><p><strong>Device details</strong><br>'+product.description+'</p><p><strong>Known condition</strong><br>'+product.issue+'</p><p>Sample preview only. Offer and bid submissions run as demos; no seller is contacted.</p></div></details>';
     return article;
   }
   function render() {

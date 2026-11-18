@@ -8,7 +8,7 @@ function harness(embedded) {
   const parent = {postMessage: message => messages.push(message)};
   const window = {addEventListener: (name, callback) => windowEvents[name] = callback};
   window.parent = embedded ? parent : window;
-  const frames = ['home', 'evaluate', 'verdict', 'routing', 'transact', 'marketplace'].map(page => ({
+  const frames = ['home', 'evaluate', 'verdict', 'routing', 'transact', 'marketplace', 'buyer'].map(page => ({
     dataset: {page}, style: {}, contentWindow: {postMessage: message => messages.push(message)},
     closest: () => ({scrollIntoView: () => scrolled.push(page)}),
   }));
@@ -66,6 +66,17 @@ assert.equal(board.messages.at(-1).browse.q, 'iPhone');
 child.windowEvents.message({source: child.parent, data: {type: 'ewise:browse', browse: {category: 'laptops', q: 'Apple'}}});
 assert.equal(filtered.category, 'laptops');
 assert.equal(filtered.q, 'Apple');
+board.windowEvents.message({source: board.frames[5].contentWindow, data: {type:'ewise:navigate',page:'buyer',listing:'galaxy-s21'}});
+assert.equal(board.scrolled.at(-1),'buyer');
+assert.equal(board.messages.at(-1).listing,'galaxy-s21');
+let listing;
+child.documentEvents['ewise:listing'] = event => listing = event.detail;
+child.windowEvents.message({source:{},data:{type:'ewise:listing',listing:'galaxy-s21'}});
+assert.equal(listing,undefined);
+child.windowEvents.message({source:child.parent,data:{type:'ewise:listing',listing:'<script>'}});
+assert.equal(listing,undefined);
+child.windowEvents.message({source:child.parent,data:{type:'ewise:listing',listing:'galaxy-s21'}});
+assert.equal(listing,'galaxy-s21');
 assert.ok(child.messages.some(message => message.type === 'ewise:resize' && message.height === 1235));
 let prevented = false;
 const click = {target: {closest: () => ({dataset: {page: 'verdict'}})}, button: 0, preventDefault: () => prevented = true};

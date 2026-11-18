@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  const pageNames = ['home', 'evaluate', 'verdict', 'routing', 'transact', 'marketplace'];
+  const pageNames = ['home', 'evaluate', 'verdict', 'routing', 'transact', 'marketplace', 'buyer'];
   const embedded = window.parent !== window;
 
   function selection(value) {
@@ -10,14 +10,14 @@
 
   function browse(value) {
     if (!value || (value.category === undefined && value.query === undefined && value.q === undefined)) return null;
-    const category = ['smartphones', 'laptops', 'tablets', 'audio', 'gaming'].includes(value.category) ? value.category : '';
+    const category = ['smartphones', 'laptops', 'tablets', 'audio', 'gaming', 'printers', 'monitors', 'desktops', 'cameras', 'accessories'].includes(value.category) ? value.category : '';
     const query = typeof value.q === 'string' ? value.q : typeof value.query === 'string' ? value.query : '';
     return {category: category, q: query.trim().slice(0, 100)};
   }
 
   function requestPage(page, anchor, chosen) {
     if (!pageNames.includes(page)) return;
-    window.parent.postMessage({type: 'ewise:navigate', page: page, anchor: anchor || '', selection: selection(chosen), browse: browse(chosen)}, '*');
+    window.parent.postMessage({type: 'ewise:navigate', page: page, anchor: anchor || '', selection: selection(chosen), browse: browse(chosen), listing: chosen && typeof chosen.listing === 'string' ? chosen.listing.slice(0,64) : ''}, '*');
   }
 
   document.addEventListener('click', function(event) {
@@ -58,6 +58,9 @@
       if (filters && message.page === 'marketplace') {
         target.contentWindow.postMessage({type: 'ewise:browse', browse: filters}, '*');
       }
+      if (message.page === 'buyer' && typeof message.listing === 'string' && /^[a-z0-9-]{1,64}$/.test(message.listing)) {
+        target.contentWindow.postMessage({type: 'ewise:listing', listing: message.listing}, '*');
+      }
       target.closest('.board').scrollIntoView({behavior: 'auto', block: 'start'});
       if (message.anchor === 'marketplace' && message.page === 'home') {
         target.contentWindow.postMessage({type: 'ewise:scroll-anchor', anchor: 'marketplace'}, '*');
@@ -74,6 +77,9 @@
     if (embedded && event.source === window.parent && message.type === 'ewise:browse') {
       const filters = browse(message.browse);
       if (filters) document.dispatchEvent(new CustomEvent('ewise:browse', {detail: filters}));
+    }
+    if (embedded && event.source === window.parent && message.type === 'ewise:listing' && typeof message.listing === 'string' && /^[a-z0-9-]{1,64}$/.test(message.listing)) {
+      document.dispatchEvent(new CustomEvent('ewise:listing', {detail: message.listing}));
     }
   });
 

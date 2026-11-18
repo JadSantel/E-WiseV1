@@ -89,7 +89,7 @@ async function fits(page) {
     assert.match(await packed.locator('#selection-title').innerText(), /Repair/);
     await packed.getByRole('link', {name: 'Back to your verdict'}).click();
     assert.ok(await page.locator('iframe[data-page="verdict"]').evaluate(frame => Math.abs(frame.closest('.board').getBoundingClientRect().top) < 5));
-    assert.equal(await page.locator('.board iframe').count(), 6);
+    assert.equal(await page.locator('.board iframe').count(), 7);
   } finally { await new Promise(resolve => server.close(resolve)); }
   assert.deepEqual(errors, []);
   await browser.close();

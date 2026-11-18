@@ -11,7 +11,7 @@ board_path = root / 'outputs/E-wise-design-baseline.html'
 board = board_path.read_text(encoding='utf-8')
 font_url = 'data:font/woff2;base64,' + base64.b64encode((pages / 'figtree-latin.woff2').read_bytes()).decode('ascii')
 manifest = {}
-page_files = [('80fe0b9b-3f78-4cbd-9bee-26ef64b221ce', 'homepage.html'), ('1d5efe2e-cbf0-435e-9942-f8624e6301e0', 'evaluate.html'), ('8b78852c-10d7-4a2b-84ed-e4b32510f4d0', 'verdict.html'), ('bfa5cd82-95ae-49d5-90ac-b8b7d1aa8710', 'routing.html'), ('e2e4725c-80d1-466b-a35f-865eea06c70c', 'transact.html'), ('a4b1de88-04c6-43e0-8bb7-4ea47989db41', 'marketplace.html')]
+page_files = [('80fe0b9b-3f78-4cbd-9bee-26ef64b221ce', 'homepage.html'), ('1d5efe2e-cbf0-435e-9942-f8624e6301e0', 'evaluate.html'), ('8b78852c-10d7-4a2b-84ed-e4b32510f4d0', 'verdict.html'), ('bfa5cd82-95ae-49d5-90ac-b8b7d1aa8710', 'routing.html'), ('e2e4725c-80d1-466b-a35f-865eea06c70c', 'transact.html'), ('a4b1de88-04c6-43e0-8bb7-4ea47989db41', 'marketplace.html'), ('ca216617-76c0-4b42-ac81-1ff0a3e7ef00', 'buyer.html')]
 navigation_source = (pages / 'preview-navigation.js').read_text(encoding='utf-8')
 navigation_tag = '<script>' + navigation_source + '</script>'
 for key, name in page_files:

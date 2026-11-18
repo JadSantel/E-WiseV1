@@ -20,7 +20,16 @@ const captureDir = '.impeccable/review/marketplace';
   }
   try {
     await page.goto('http://127.0.0.1:8000/marketplace.html');
-    assert.equal(await cards().count(),12);
+    assert.equal(await cards().count(),18);
+    assert.equal(await page.locator('.product-visual .device-art').count(),18);
+    assert.deepEqual(await cards().locator('h3').allTextContents().then(names=>names.slice(0,3)),['Apple iPhone 13','Epson EcoTank L3150','Dell P2419H Monitor']);
+    await page.getByRole('button',{name:'Printers',exact:true}).click();
+    assert.equal(await cards().count(),2);
+    await page.getByRole('button',{name:'Monitors',exact:true}).click();
+    assert.equal(await cards().count(),1);
+    assert.equal(await cards().first().getAttribute('data-id'),'dell-p2419h');
+    assert.equal(await cards().locator('clipPath').count(),1,'Cracks are contained inside the monitor screen');
+    await page.getByRole('button',{name:'Clear all',exact:true}).click();
     assert.ok(await page.locator('.filter-sidebar').evaluate(side=>side.getBoundingClientRect().right<document.querySelector('.results-area').getBoundingClientRect().left));
     await fits(); await capture('desktop');
     await page.getByRole('button',{name:'Smartphones',exact:true}).click();
@@ -41,7 +50,7 @@ const captureDir = '.impeccable/review/marketplace';
       if(await group.getAttribute('open')===null) await group.locator('summary').click();
     }
     await option('classification','Repairable').check();
-    assert.equal(await cards().count(),2);
+    assert.equal(await cards().count(),4);
     await option('condition','Good').check();
     assert.equal(await cards().count(),0);
     await option('condition','Good').uncheck();
@@ -55,9 +64,9 @@ const captureDir = '.impeccable/review/marketplace';
     await capture('empty');
     assert.equal(await page.locator('#active-filters img').count(),0,'Search is rendered as text');
     await page.getByRole('button',{name:'Clear search & filters'}).click();
-    assert.equal(await cards().count(),12);
+    assert.equal(await cards().count(),18);
     await page.locator('#sort').selectOption('price-low');
-    assert.equal(await cards().first().getAttribute('data-id'),'iphone-11');
+    assert.equal(await cards().first().getAttribute('data-id'),'logitech-k120');
     await page.locator('#sort').selectOption('price-high');
     assert.equal(await cards().first().getAttribute('data-id'),'macbook-air');
     await page.locator('#sort').selectOption('newest');
@@ -83,7 +92,7 @@ const captureDir = '.impeccable/review/marketplace';
     assert.equal(await cards().count(),1);
     assert.equal(await cards().first().getAttribute('data-id'),'switch-lite');
     await page.evaluate(()=>document.dispatchEvent(new CustomEvent('ewise:browse',{detail:{category:'__proto__',q:''}})));
-    assert.equal(await cards().count(),12,'Unknown preset categories are ignored');
+    assert.equal(await cards().count(),18,'Unknown preset categories are ignored');
     for(const width of [1280,1024,800,760,390,320]) {
       await page.setViewportSize({width,height:900});
       await fits();
